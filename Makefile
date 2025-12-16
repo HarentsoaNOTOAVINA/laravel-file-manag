@@ -1,5 +1,5 @@
 up:
-	./vendor/bin/sail up
+	./vendor/bin/sail up -d
 
 down:
 	./vendor/bin/sail down
