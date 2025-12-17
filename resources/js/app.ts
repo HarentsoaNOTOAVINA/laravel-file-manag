@@ -8,6 +8,9 @@ import { initializeTheme } from './composables/useAppearance';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
+import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
+
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     resolve: (name) =>
@@ -18,6 +21,11 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
+            .use(PrimeVue, {
+                theme: {
+                    preset: Aura
+                }
+            })
             .mount(el);
     },
     progress: {
