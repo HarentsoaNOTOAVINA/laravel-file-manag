@@ -3,9 +3,10 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard, files } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
-import { Download, FolderPlus, Search, Share2, Upload } from 'lucide-vue-next';
+import { Download, FolderPlus, Search, Share2, Upload, Expand, Shrink } from 'lucide-vue-next';
 import Tree from 'primevue/tree';
 import { ref } from 'vue';
+import { Button } from "@/components/ui/button";
 
 // Dummy data for the tree
 const nodes = ref([
@@ -80,15 +81,29 @@ const nodes = ref([
 ]);
 
 const selectedKey = ref(null);
+const expandedKeys = ref<Record<string, boolean>>({});
 const loading = ref(false);
 const searchQuery = ref('');
 
 const expandAll = () => {
-    // Logic to expand all nodes
+    for (let node of nodes.value) {
+        expandNode(node);
+    }
+    expandedKeys.value = { ...expandedKeys.value };
 };
 
 const collapseAll = () => {
-    // Logic to collapse all nodes
+    expandedKeys.value = {};
+};
+
+const expandNode = (node: any) => {
+    if (node.children && node.children.length) {
+        expandedKeys.value[node.key] = true;
+
+        for (let child of node.children) {
+            expandNode(child);
+        }
+    }
 };
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -125,41 +140,68 @@ const breadcrumbs: BreadcrumbItem[] = [
 
                         <!-- Actions Toolbar -->
                         <div class="flex items-center gap-2">
-                            <button
-                                class="flex items-center gap-2 rounded-md bg-blue-50 px-3 py-1.5 text-sm text-blue-600 transition-colors hover:bg-blue-100"
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700"
                             >
-                                <FolderPlus class="h-4 w-4" />
+                                <FolderPlus class="h-4 w-4 mr-2" />
                                 New Folder
-                            </button>
-                            <button
-                                class="flex items-center gap-2 rounded-md bg-green-50 px-3 py-1.5 text-sm text-green-600 transition-colors hover:bg-green-100"
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700"
                             >
-                                <Upload class="h-4 w-4" />
+                                <Upload class="h-4 w-4 mr-2" />
                                 Upload
-                            </button>
+                            </Button>
 
                             <div
                                 class="mx-1 h-4 w-px bg-gray-300 dark:bg-gray-600"
                             ></div>
 
-                            <button
-                                class="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
+                            <Button
+                                variant="ghost"
+                                size="icon"
                                 :disabled="!selectedKey"
                             >
                                 <Download class="h-4 w-4" />
-                            </button>
-                            <button
-                                class="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="icon"
                                 :disabled="!selectedKey"
                             >
                                 <Share2 class="h-4 w-4" />
-                            </button>
+                            </Button>
+
                         </div>
                     </div>
 
                     <div class="p-4">
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                class="bg-gray-500 text-white border-gray-600 hover:bg-gray-600 hover:text-white"
+                                @click="expandAll"
+                            >
+                                <Expand class="h-4 w-4 mr-2" />
+                                Expand All
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                @click="collapseAll"
+                            >
+                                <Shrink class="h-4 w-4 mr-2" />
+                                Collapse All
+                            </Button>
+                        </div>
                         <Tree
                             v-model:selectionKeys="selectedKey"
+                            v-model:expandedKeys="expandedKeys"
                             :value="nodes"
                             selectionMode="checkbox"
                             class="w-full"
@@ -193,3 +235,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+</style>

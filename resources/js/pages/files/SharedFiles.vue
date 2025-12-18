@@ -187,4 +187,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     </AppLayout>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+</style>
