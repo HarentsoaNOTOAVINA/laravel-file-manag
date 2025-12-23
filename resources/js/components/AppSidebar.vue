@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import {
@@ -9,12 +8,12 @@ import {
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
-    SidebarMenuItem,
+    SidebarMenuItem
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { dashboard, files, share_files, shared_files } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { LayoutGrid, Folder, Share, Trash, ExternalLink } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -23,20 +22,28 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
     },
-];
-
-const footerNavItems: NavItem[] = [
     {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
+        title: 'My Files',
+        href: files(),
         icon: Folder,
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
+        title: 'Shared with me',
+        href: share_files(),
+        icon: Share,
+    },
+    {
+        title: 'Shared by me',
+        href: shared_files(),
+        icon: ExternalLink,
+    },
+    {
+        title: 'Trash',
+        href: '#',
+        icon: Trash,
     },
 ];
+
 </script>
 
 <template>
@@ -58,7 +65,6 @@ const footerNavItems: NavItem[] = [
         </SidebarContent>
 
         <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
             <NavUser />
         </SidebarFooter>
     </Sidebar>

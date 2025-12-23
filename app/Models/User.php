@@ -10,6 +10,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
+/**
+ * @method static \App\Models\User create(array $attributes = [])
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
@@ -37,6 +40,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'two_factor_recovery_codes',
         'remember_token',
     ];
+
 
     /**
      * Get the attributes that should be cast.
