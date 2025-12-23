@@ -2,8 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\File;
+use App\Models\FileShare;
+use App\Models\StarredFile;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Factories\StarredFileFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        User::factory(10)->create();
+        File::factory(10)->create();
+        FileShare::factory(3)->create();
+        StarredFile::factory(3)->create();
     }
 }
