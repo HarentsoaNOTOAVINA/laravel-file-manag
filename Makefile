@@ -8,7 +8,7 @@ stop:
 	./vendor/bin/sail stop
 
 restart:
-	./vendor/bin/sail down && ./vendor/bin/sail up
+	./vendor/bin/sail down && ./vendor/bin/sail up -d
 
 shell:
 	./vendor/bin/sail shell
