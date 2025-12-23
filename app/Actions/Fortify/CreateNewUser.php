@@ -2,7 +2,9 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\File;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -18,6 +20,7 @@ class CreateNewUser implements CreatesNewUsers
      * @param array<string, string> $input
      * @return User
      * @throws ValidationException
+     * @throws \Throwable
      */
     public function create(array $input): User
     {
@@ -33,10 +36,21 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => $input['password'],
-        ]);
+        return DB::transaction(function () use ($input) {
+            $user = User::create([
+                'name' => $input['name'],
+                'email' => $input['email'],
+                'password' => $input['password'],
+            ]);
+
+            $file = new File();
+            $file->name = $user->email;
+            $file->is_folder = true;
+            $file->created_by = $user->id;
+            $file->updated_by = $user->id;
+            $file->makeRoot()->save();
+
+            return $user;
+        });
     }
 }
