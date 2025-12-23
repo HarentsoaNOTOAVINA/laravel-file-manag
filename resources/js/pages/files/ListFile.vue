@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { dashboard, files } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
-import { Download, FolderPlus, Search, Share2, Upload, Expand, Shrink, X, CloudUpload } from 'lucide-vue-next';
+import { Download, FolderPlus, Search, Share2, Upload, Expand, Shrink, X, CloudUpload, Folder, File as FileIcon } from 'lucide-vue-next';
 import Tree from 'primevue/tree';
 import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
@@ -20,78 +20,12 @@ import {
   DialogClose,
 } from '@/components/ui/dialog'
 
-// Dummy data for the tree
-const nodes = ref([
-    {
-        key: '0',
-        label: 'Documents',
-        data: 'Documents Folder',
-        icon: 'pi pi-fw pi-inbox',
-        children: [
-            {
-                key: '0-0',
-                label: 'Work',
-                data: 'Work Folder',
-                icon: 'pi pi-fw pi-cog',
-                children: [
-                    {
-                        key: '0-0-0',
-                        label: 'Expenses.doc',
-                        icon: 'pi pi-fw pi-file',
-                        data: 'Expenses Document'
-                    },
-                    {
-                        key: '0-0-1',
-                        label: 'Resume.doc',
-                        icon: 'pi pi-fw pi-file',
-                        data: 'Resume Document'
-                    }
-                ]
-            },
-            {
-                key: '0-1',
-                label: 'Home',
-                data: 'Home Folder',
-                icon: 'pi pi-fw pi-home',
-                children: [
-                    {
-                        key: '0-1-0',
-                        label: 'Invoices.txt',
-                        icon: 'pi pi-fw pi-file',
-                        data: 'Invoices for this month'
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        key: '1',
-        label: 'Pictures',
-        data: 'Pictures Folder',
-        icon: 'pi pi-fw pi-image',
-        children: [
-            {
-                key: '1-0',
-                label: 'barcelona.jpg',
-                icon: 'pi pi-fw pi-image',
-                data: 'Barcelona Photo'
-            },
-            {
-                key: '1-1',
-                label: 'logo.jpg',
-                icon: 'pi pi-fw pi-image',
-                data: 'PrimeFaces Logo'
-            },
-            {
-                key: '1-2',
-                label: 'primeui.png',
-                icon: 'pi pi-fw pi-image',
-                data: 'PrimeUI Logo'
-            }
-        ]
-    }
-]);
+const props = defineProps<{
+    files: any[]
+}>();
 
+// Dummy data for the tree
+const nodes = ref(props.files);
 
 // Types for PrimeVue checkbox selection
 interface SelectionState {
@@ -144,14 +78,14 @@ import { computed } from 'vue';
 const isActionDisabled = computed(() => {
     // In checkbox mode, we only consider fully checked items as the active context
     const checkedKeys = Object.keys(selectedKey.value).filter(k => selectedKey.value[k].checked);
-    
+
     // 1. If nothing is checked, it's root context -> ENABLED
     if (checkedKeys.length === 0) return false;
 
     // 2. Check if there is at least one folder in the checked items
     const hasFolderChecked = checkedKeys.some(key => {
         const node = findNodeByKey(nodes.value, key);
-        return node && node.children; // It's a folder if it has children property
+        return node && node.is_folder; // Use the is_folder flag from backend
     });
 
     // 3. User rule: "deactivate when file is solected, otherwise, it is actiuvated"
@@ -172,20 +106,20 @@ const createNewFolder = () => {
 
     // Determine parent
     // If selection exists and is a FOLDER, append to it.
-    // If selection exists and is a FILE, we shouldn't be here because button is disabled, 
+    // If selection exists and is a FILE, we shouldn't be here because button is disabled,
     // but if we were, we'd add to its parent? No, "deactivate when file is selected".
-    
+
     const keys = Object.keys(selectedKey.value).filter(k => selectedKey.value[k].checked);
-    
+
     if (keys.length > 0) {
         // Find the first selected FOLDER in the checked keys
         const parentKey = keys.find(key => {
             const node = findNodeByKey(nodes.value, key);
-            return node && node.children;
+            return node && node.is_folder;
         });
 
         const parentNode = parentKey ? findNodeByKey(nodes.value, parentKey) : null;
-        
+
         if (parentNode && parentNode.children) {
             parentNode.children.push(newNode);
             expandedKeys.value[parentNode.key] = true;
@@ -196,7 +130,7 @@ const createNewFolder = () => {
     } else {
         nodes.value.push(newNode);
     }
-    
+
     isCreateFolderOpen.value = false;
     newFolderName.value = 'New Folder'; // Reset
 };
@@ -253,10 +187,10 @@ const breadcrumbs: BreadcrumbItem[] = [
                                             <Label for="name" class="text-right">
                                                 Name
                                             </Label>
-                                            <Input 
-                                                id="name" 
+                                            <Input
+                                                id="name"
                                                 v-model="newFolderName"
-                                                class="col-span-3" 
+                                                class="col-span-3"
                                                 @keyup.enter="createNewFolder"
                                             />
                                         </div>
@@ -360,7 +294,12 @@ const breadcrumbs: BreadcrumbItem[] = [
                             class="w-full"
                             :filter="true"
                             filterMode="lenient"
-                        ></Tree>
+                        >
+                            <template #nodeicon="{ node }">
+                                <Folder v-if="node.is_folder" class="h-6 w-6 mr-2 text-blue-500" />
+                                <FileIcon v-else class="h-6 w-6 mr-2 text-gray-400" />
+                            </template>
+                        </Tree>
                     </div>
                 </div>
 
