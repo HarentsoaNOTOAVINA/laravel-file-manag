@@ -367,7 +367,7 @@ dashboard.form = dashboardForm
 
 /**
 * @see \App\Http\Controllers\Files\FileController::files
-* @see app/Http/Controllers/Files/FileController.php:10
+* @see app/Http/Controllers/Files/FileController.php:18
 * @route '/admin/files'
 */
 export const files = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -382,7 +382,7 @@ files.definition = {
 
 /**
 * @see \App\Http\Controllers\Files\FileController::files
-* @see app/Http/Controllers/Files/FileController.php:10
+* @see app/Http/Controllers/Files/FileController.php:18
 * @route '/admin/files'
 */
 files.url = (options?: RouteQueryOptions) => {
@@ -391,7 +391,7 @@ files.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Files\FileController::files
-* @see app/Http/Controllers/Files/FileController.php:10
+* @see app/Http/Controllers/Files/FileController.php:18
 * @route '/admin/files'
 */
 files.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -401,7 +401,7 @@ files.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Files\FileController::files
-* @see app/Http/Controllers/Files/FileController.php:10
+* @see app/Http/Controllers/Files/FileController.php:18
 * @route '/admin/files'
 */
 files.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -411,7 +411,7 @@ files.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Files\FileController::files
-* @see app/Http/Controllers/Files/FileController.php:10
+* @see app/Http/Controllers/Files/FileController.php:18
 * @route '/admin/files'
 */
 const filesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -421,7 +421,7 @@ const filesForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Files\FileController::files
-* @see app/Http/Controllers/Files/FileController.php:10
+* @see app/Http/Controllers/Files/FileController.php:18
 * @route '/admin/files'
 */
 filesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -431,7 +431,7 @@ filesForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Files\FileController::files
-* @see app/Http/Controllers/Files/FileController.php:10
+* @see app/Http/Controllers/Files/FileController.php:18
 * @route '/admin/files'
 */
 filesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -445,6 +445,62 @@ filesForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 })
 
 files.form = filesForm
+
+/**
+* @see \App\Http\Controllers\Files\FileController::create_folder
+* @see app/Http/Controllers/Files/FileController.php:29
+* @route '/admin/files/folder'
+*/
+export const create_folder = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: create_folder.url(options),
+    method: 'post',
+})
+
+create_folder.definition = {
+    methods: ["post"],
+    url: '/admin/files/folder',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Files\FileController::create_folder
+* @see app/Http/Controllers/Files/FileController.php:29
+* @route '/admin/files/folder'
+*/
+create_folder.url = (options?: RouteQueryOptions) => {
+    return create_folder.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Files\FileController::create_folder
+* @see app/Http/Controllers/Files/FileController.php:29
+* @route '/admin/files/folder'
+*/
+create_folder.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: create_folder.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Files\FileController::create_folder
+* @see app/Http/Controllers/Files/FileController.php:29
+* @route '/admin/files/folder'
+*/
+const create_folderForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: create_folder.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\Files\FileController::create_folder
+* @see app/Http/Controllers/Files/FileController.php:29
+* @route '/admin/files/folder'
+*/
+create_folderForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: create_folder.url(options),
+    method: 'post',
+})
+
+create_folder.form = create_folderForm
 
 /**
 * @see \App\Http\Controllers\Files\ShareFilesController::share_files
