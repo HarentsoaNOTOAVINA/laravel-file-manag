@@ -25,6 +25,9 @@ sail-test:
 up:
 	docker compose up -d
 
+down:
+	docker compose down
+
 migrate:
 	docker compose exec laravel.test php artisan migrate
 
