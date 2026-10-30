@@ -1,23 +1,35 @@
-up:
+sail-up:
 	./vendor/bin/sail up -d
 
-down:
+sail-down:
 	./vendor/bin/sail down
 
-stop:
+sail-stop:
 	./vendor/bin/sail stop
 
-restart:
+sail-restart:
 	./vendor/bin/sail down && ./vendor/bin/sail up -d
 
-shell:
+sail-shell:
 	./vendor/bin/sail shell
 
-artisan:
+sail-artisan:
 	./vendor/bin/sail artisan $(cmd)
 
-migrate:
+sail-migrate:
 	./vendor/bin/sail artisan migrate
 
-test:
+sail-test:
 	./vendor/bin/sail test
+
+up:
+	docker compose up -d
+
+migrate:
+	docker compose exec laravel.test php artisan migrate
+
+test:
+	docker compose exec app php artisan test
+
+artisan:
+	docker compose exec app php artisan $(cmd)
